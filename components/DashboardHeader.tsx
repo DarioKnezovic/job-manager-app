@@ -1,9 +1,16 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Modal, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useSession } from "../ctx";
 
 export default function DashboardHeader() {
     const [visible, setVisible] = useState(false);
+    const { signOut } = useSession();
+
+    const handleLogout = () => {
+        signOut();
+        setVisible(false);
+    };
 
     return (
         <View style={styles.header}>
@@ -17,17 +24,23 @@ export default function DashboardHeader() {
                 animationType="fade"
                 onRequestClose={() => setVisible(false)}
             >
-                <TouchableOpacity style={styles.overlay} onPress={() => setVisible(false)}>
-                    <View style={styles.dropdown}>
-                        <TouchableOpacity style={styles.item}>
-                            <Text>Profile</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.item}>
-                            <Text>Settings</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.item}>
-                            <Text>Logout</Text>
-                        </TouchableOpacity>
+                <TouchableOpacity
+                    style={StyleSheet.absoluteFill}
+                    onPress={() => setVisible(false)}
+                    activeOpacity={1}
+                >
+                    <View style={styles.dropdownContainer}>
+                        <View style={styles.dropdown}>
+                            <TouchableOpacity style={styles.item}>
+                                <Text>Profile</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.item}>
+                                <Text>Settings</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={handleLogout} style={styles.item}>
+                                <Text>Logout</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </TouchableOpacity>
             </Modal>
@@ -46,16 +59,15 @@ const styles = StyleSheet.create({
         borderBottomColor: '#eee',
     },
     title: { fontSize: 24, fontWeight: 'bold' },
-    overlay: {
-        flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.2)',
-        justifyContent: 'flex-end',
-        alignItems: 'flex-end',
+    dropdownContainer: {
+        position: 'absolute',
+        top: 56, // Adjust based on header height
+        right: 0, // Match header padding
     },
     dropdown: {
+        marginTop: 62,
         backgroundColor: '#fff',
         borderRadius: 8,
-        margin: 16,
         paddingVertical: 8,
         width: 160,
         elevation: 4,
