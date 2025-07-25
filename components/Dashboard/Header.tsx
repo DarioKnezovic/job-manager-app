@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Modal, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useSession } from "../ctx";
+import { useSession } from "../../ctx";
 
-export default function DashboardHeader() {
+export default function Header() {
     const [visible, setVisible] = useState(false);
     const { signOut } = useSession();
 

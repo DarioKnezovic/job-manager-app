@@ -2,6 +2,7 @@ import React from 'react';
 import { FlatList, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { useSession } from '../../ctx';
 import { Role } from '../../types/auth';
+import Manager from "../../components/Dashboard/Manager";
 
 const managerTasks = [
     { id: '1', title: 'Assign Order #123', description: 'Assign to worker' },
@@ -27,19 +28,7 @@ export default function Dashboard() {
         <SafeAreaView style={styles.container}>
             <Text style={styles.header}>Dashboard</Text>
             {role === Role.Manager ? (
-                <>
-                    <Text style={styles.sectionTitle}>Tasks to Assign</Text>
-                    <FlatList
-                        data={managerTasks}
-                        keyExtractor={(item) => item.id}
-                        renderItem={({ item }) => (
-                            <View style={styles.listItem}>
-                                <Text style={styles.listTitle}>{item.title}</Text>
-                                <Text style={styles.listDesc}>{item.description}</Text>
-                            </View>
-                        )}
-                    />
-                </>
+                <Manager />
             ) : (
                 <>
                     <Text style={styles.sectionTitle}>Today's Tasks</Text>
