@@ -14,7 +14,7 @@ export default function DashboardHeader() {
 
     return (
         <View style={styles.header}>
-            <Text style={styles.title}>Dashboard</Text>
+            <Text style={styles.title}>JobPilot</Text>
             <TouchableOpacity onPress={() => setVisible(true)}>
                 <Ionicons name="person-circle-outline" size={32} color="#333" />
             </TouchableOpacity>
