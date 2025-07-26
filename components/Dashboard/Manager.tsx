@@ -1,8 +1,8 @@
 import React from 'react';
 import { useState } from "react";
 import { FlatList, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
-import {router} from "expo-router";
+import Dropdown from "../Reusable/Dropdown";
+import { router } from "expo-router";
 
 const managerTasks = [
     { id: '1', title: 'Assign Order #123', description: 'Assign to worker' },
@@ -33,18 +33,14 @@ export default function Manager() {
                             <Text style={styles.listTitle}>{item.title}</Text>
                         </TouchableOpacity>
                         <View style={styles.dropdownContainer}>
-                            <Picker
+                            <Dropdown
+                                options={[
+                                    ...mockWorkers.map(w => ({ label: w.name, value: w.id }))
+                                ]}
                                 selectedValue={selectedWorkers[item.id] || ''}
-                                style={styles.picker}
-                                onValueChange={(value) =>
-                                    setSelectedWorkers((prev) => ({ ...prev, [item.id]: value }))
-                                }
-                            >
-                                <Picker.Item label="Assign worker" value="" />
-                                {mockWorkers.map((worker) => (
-                                    <Picker.Item key={worker.id} label={worker.name} value={worker.id} />
-                                ))}
-                            </Picker>
+                                onValueChange={value => setSelectedWorkers(prev => ({ ...prev, [item.id]: value }))}
+                                placeholder="Assign worker"
+                            />
                         </View>
                     </View>
                 )}
