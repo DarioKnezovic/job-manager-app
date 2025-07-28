@@ -4,6 +4,7 @@ import { Appbar, Card, List, ActivityIndicator } from 'react-native-paper';
 import { useSession } from '../../ctx';
 import { Role } from '../../types/auth';
 import Manager from "../../components/Dashboard/Manager";
+import Worker from "../../components/Dashboard/Worker";
 
 const managerTasks = [
     { id: '1', title: 'Assign Order #123', description: 'Assign to worker' },
@@ -31,21 +32,7 @@ export default function Dashboard() {
             {role === Role.Manager ? (
                 <Manager />
             ) : (
-                <>
-                    <List.Section title="Today's Tasks">
-                        {workerTasks.map((task) => (
-                            <Card key={task.id} style={styles.card}>
-                                <Card.Content>
-                                    <List.Item
-                                        title={task.title}
-                                        description={task.time}
-                                        left={props => <List.Icon {...props} icon="clipboard-check-outline" />}
-                                    />
-                                </Card.Content>
-                            </Card>
-                        ))}
-                    </List.Section>
-                </>
+                <Worker />
             )}
         </SafeAreaView>
     );
