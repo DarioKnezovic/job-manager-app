@@ -35,7 +35,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
                     const session: Session = {
                         userId: '123456',
                         token: 'abcdefg123456',
-                        role: Role.Manager
+                        role: Role.Worker
                     };
                     setSession(session);
                 },

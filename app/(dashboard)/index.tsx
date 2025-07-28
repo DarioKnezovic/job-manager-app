@@ -1,5 +1,6 @@
 import React from 'react';
-import { FlatList, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, StyleSheet } from 'react-native';
+import { Appbar, Card, List, ActivityIndicator } from 'react-native-paper';
 import { useSession } from '../../ctx';
 import { Role } from '../../types/auth';
 import Manager from "../../components/Dashboard/Manager";
@@ -16,32 +17,34 @@ const workerTasks = [
 
 export default function Dashboard() {
     const { session, isLoading } = useSession();
+    const role = session?.role;
 
     if (isLoading) {
-        return <Text>Loading...</Text>;
+        return <ActivityIndicator animating={true} />;
     }
-
-    // Assume session?.role is either 'manager' or 'worker'
-    const role = session?.role;
 
     return (
         <SafeAreaView style={styles.container}>
-            <Text style={styles.header}>Dashboard</Text>
+            <Appbar.Header>
+                <Appbar.Content title="Dashboard" />
+            </Appbar.Header>
             {role === Role.Manager ? (
                 <Manager />
             ) : (
                 <>
-                    <Text style={styles.sectionTitle}>Today's Tasks</Text>
-                    <FlatList
-                        data={workerTasks}
-                        keyExtractor={(item) => item.id}
-                        renderItem={({ item }) => (
-                            <View style={styles.listItem}>
-                                <Text style={styles.listTitle}>{item.title}</Text>
-                                <Text style={styles.listDesc}>{item.time}</Text>
-                            </View>
-                        )}
-                    />
+                    <List.Section title="Today's Tasks">
+                        {workerTasks.map((task) => (
+                            <Card key={task.id} style={styles.card}>
+                                <Card.Content>
+                                    <List.Item
+                                        title={task.title}
+                                        description={task.time}
+                                        left={props => <List.Icon {...props} icon="clipboard-check-outline" />}
+                                    />
+                                </Card.Content>
+                            </Card>
+                        ))}
+                    </List.Section>
                 </>
             )}
         </SafeAreaView>
@@ -49,10 +52,6 @@ export default function Dashboard() {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, padding: 16, backgroundColor: '#fff' },
-    header: { fontSize: 28, fontWeight: 'bold', marginBottom: 16 },
-    sectionTitle: { fontSize: 18, fontWeight: '600', marginBottom: 8 },
-    listItem: { padding: 12, borderBottomWidth: 1, borderBottomColor: '#eee' },
-    listTitle: { fontSize: 16, fontWeight: 'bold' },
-    listDesc: { fontSize: 14, color: '#888' },
+    container: { flex: 1, backgroundColor: '#fff' },
+    card: { margin: 8 },
 });
