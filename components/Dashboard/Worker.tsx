@@ -4,8 +4,8 @@ import { StyleSheet } from "react-native";
 import { router } from "expo-router";
 
 const workerTasks = [
-    { id: '1', title: 'Deliver Order #123', description: 'Broken dishwasher', status: 'complete' },
-    { id: '2', title: 'Pick up Order #124', description: 'Dunno', status: 'ready' },
+    { id: '1', title: 'Deliver Order #123', description: 'Broken dishwasher', status: 'done' },
+    { id: '2', title: 'Pick up Order #124', description: 'Dunno', status: 'pending' },
 ];
 
 export default function Worker() {
@@ -15,12 +15,12 @@ export default function Worker() {
 
     const getBackgroundColor = (status: string) => {
         switch (status) {
-            case 'complete':
-                return { backgroundColor: 'lightgreen' };
-            case 'doing':
-                return { backgroundColor: 'lightyellow' };
-            case 'ready':
-                return { backgroundColor: 'lightblue' };
+            case 'done':
+                return { backgroundColor: '#4caf50' };
+            case 'in progress':
+                return { backgroundColor: '#ff9800' };
+            case 'pending':
+                return { backgroundColor: '#bdbdbd' };
             default:
                 return {};
         }

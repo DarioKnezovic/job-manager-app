@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, StyleSheet, Linking } from 'react-native';
-import { Card, Button, Text, Title, Paragraph, Chip } from 'react-native-paper';
-import { Appbar } from 'react-native-paper';
+import { StyleSheet, Linking, View } from 'react-native';
+import { Card, Button, Text, Chip, Appbar } from 'react-native-paper';
+import { SafeAreaView } from 'react-native';
 import { router } from "expo-router";
 import { Role } from "../../../types/auth";
 import { useSession } from "../../../ctx";
@@ -34,7 +34,6 @@ const mockJob: Job = {
 
 export default function JobDetails() {
     const { session } = useSession();
-
     const role = session?.role;
 
     const handleCall = () => {
@@ -44,50 +43,49 @@ export default function JobDetails() {
     const getChipStyle = (status: JobStatus) => {
         switch (status) {
             case 'done':
-                return { backgroundColor: '#4caf50', color: '#fff' }; // green
+                return { backgroundColor: '#4caf50', color: '#fff' };
             case 'in progress':
-                return { backgroundColor: '#ff9800', color: '#fff' }; // orange
+                return { backgroundColor: '#ff9800', color: '#fff' };
             case 'pending':
             default:
-                return { backgroundColor: '#bdbdbd', color: '#fff' }; // gray
+                return { backgroundColor: '#bdbdbd', color: '#fff' };
         }
-    }
+    };
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <Appbar.Header>
                 <Appbar.BackAction onPress={() => router.back()} />
                 <Appbar.Content title="Job Details" />
             </Appbar.Header>
-            <Card>
+            <Card style={styles.card}>
                 <Card.Content>
-                    <Title>Job Details</Title>
-                    <Paragraph>
+                    <Text style={styles.text}>
                         <Text style={styles.label}>Assigned Worker: </Text>
                         {mockJob.workerName}
-                    </Paragraph>
-                    <Paragraph>
+                    </Text>
+                    <Text style={styles.text}>
                         <Text style={styles.label}>Date & Time: </Text>
                         {mockJob.date} at {mockJob.time}
-                    </Paragraph>
-                    <Paragraph>
+                    </Text>
+                    <Text style={styles.text}>
                         <Text style={styles.label}>Customer: </Text>
                         {mockJob.customerName}
-                    </Paragraph>
-                    <Paragraph>
+                    </Text>
+                    <Text style={styles.text}>
                         <Text style={styles.label}>Address: </Text>
                         {mockJob.address}
-                    </Paragraph>
-                    <Paragraph>
+                    </Text>
+                    <Text style={styles.text}>
                         <Text style={styles.label}>Phone: </Text>
                         <Text style={styles.phone} onPress={handleCall}>
                             {mockJob.phone}
                         </Text>
-                    </Paragraph>
-                    <Paragraph>
+                    </Text>
+                    <Text style={styles.text}>
                         <Text style={styles.label}>Description: </Text>
                         {mockJob.description}
-                    </Paragraph>
+                    </Text>
                     <View style={styles.statusRow}>
                         <Text style={styles.label}>Status: </Text>
                         <Chip
@@ -118,14 +116,17 @@ export default function JobDetails() {
                     </Button>
                 </Card.Actions>
             </Card>
-        </View>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
     container: { flex: 1, padding: 16, backgroundColor: '#f6f6f6' },
-    label: { fontWeight: 'bold' },
+    card: { marginVertical: 16 },
+    label: { fontWeight: 'bold', fontSize: 16, marginBottom: 4 },
     phone: { color: '#1976d2', textDecorationLine: 'underline' },
-    statusRow: { flexDirection: 'row', alignItems: 'center', marginTop: 8 },
+    statusRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', marginTop: 8 },
+    chipContainer: { flex: 1, alignItems: 'center' },
     doneButton: { marginLeft: 8 },
+    text: { fontSize: 16, marginBottom: 8 }, // New style for text
 });
