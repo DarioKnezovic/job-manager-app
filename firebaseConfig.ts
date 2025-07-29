@@ -3,12 +3,12 @@ import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const firebaseConfig = {
-    apiKey: "AIzaSyD7j8C0lOzAFFo8xnVVEotGXG5iHsF8yNU",
-    authDomain: "repairapp-b2a02.firebaseapp.com",
-    projectId: "repairapp-b2a02",
-    storageBucket: "repairapp-b2a02.firebasestorage.app",
-    messagingSenderId: "554481238138",
-    appId: "1:554481238138:web:0fe8ee6f742210eac9bbc3"
+    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+    authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER,
+    appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
 
 // Initialize Firebase
