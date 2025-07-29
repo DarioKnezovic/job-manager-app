@@ -2,7 +2,8 @@ import { createContext, type PropsWithChildren, use } from 'react';
 import { useStorageState } from './useStorageState';
 import { Role, Session } from "./types/auth.ts";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "./firebaseConfig";
+import { auth, db } from "./firebaseConfig";
+import { doc, getDoc } from "firebase/firestore";
 
 const AuthContext = createContext<{
     signIn: (email: string, password: string) => Promise<void>;
@@ -36,14 +37,23 @@ export function SessionProvider({ children }: PropsWithChildren) {
                     try {
                         const userCredential = await signInWithEmailAndPassword(auth, email, password);
                         const user = userCredential.user;
+                        const docRef = doc(db, "users", user.uid);
+                        const docSnap = await getDoc(docRef);
 
-                        const newSession: Session = {
-                            userId: user.uid,
-                            token: await user.getIdToken(),
-                            role: Role.Worker
-                        };
-
-                        setSession(newSession);
+                        if (docSnap.exists()) {
+                            const userData = docSnap.data();
+                            const newSession: Session = {
+                                userId: user.uid,
+                                token: await user.getIdToken(),
+                                email: userData.email,
+                                firstName: userData.firstName,
+                                lastName: userData.lastName,
+                                role: userData.role,
+                            };
+                            setSession(newSession);
+                        } else {
+                            throw new Error("User data not found in Firestore");
+                        }
                     } catch (error) {
                         console.error("Sign-in failed:", error);
                         throw error;
