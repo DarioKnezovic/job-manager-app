@@ -55,7 +55,6 @@ export function SessionProvider({ children }: PropsWithChildren) {
                             throw new Error("User data not found in Firestore");
                         }
                     } catch (error) {
-                        console.error("Sign-in failed:", error);
                         throw error;
                     }
                     // Perform sign-in logic here

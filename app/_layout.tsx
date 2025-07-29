@@ -4,6 +4,7 @@ import { SplashScreenController } from '../splash';
 import { LoadingProvider, useGlobalLoading } from '../contexts/LoadingContext';
 import LoadingIndicator from '../components/Reusable/Loading';
 import { View } from 'react-native';
+import {ToastProvider} from "../contexts/ToastContext";
 
 // Loading overlay component that shows when isLoading is true
 function LoadingOverlay() {
@@ -31,11 +32,13 @@ function LoadingOverlay() {
 export default function Root() {
     return (
         <SessionProvider>
-            <LoadingProvider>
-                <SplashScreenController />
-                <RootNavigator />
-                <LoadingOverlay />
-            </LoadingProvider>
+            <ToastProvider>
+                <LoadingProvider>
+                    <SplashScreenController />
+                    <RootNavigator />
+                    <LoadingOverlay />
+                </LoadingProvider>
+            </ToastProvider>
         </SessionProvider>
     );
 }

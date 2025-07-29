@@ -3,19 +3,21 @@ import { StyleSheet, SafeAreaView } from 'react-native';
 import { TextInput, Button, Text, Card } from 'react-native-paper';
 import { useSession } from "../ctx";
 import { useGlobalLoading } from "../contexts/LoadingContext";
+import { useToast } from "../contexts/ToastContext";
 
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const { isLoading, withLoading } = useGlobalLoading();
     const { signIn } = useSession();
+    const { showToast } = useToast();
 
     const handleLogin = () => {
         withLoading(async () => {
             try {
                 await signIn(email, password);
             } catch (error) {
-                console.error('Login failed:', error);
+                showToast('Ooops, something went wrong. Please try again.', 'error');
             }
         });
     };
