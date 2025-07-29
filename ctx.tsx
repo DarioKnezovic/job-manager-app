@@ -46,9 +46,9 @@ export function SessionProvider({ children }: PropsWithChildren) {
                                 userId: user.uid,
                                 token: await user.getIdToken(),
                                 email: userData.email,
-                                firstName: userData.firstName,
-                                lastName: userData.lastName,
-                                role: userData.role,
+                                firstName: userData.first_name,
+                                lastName: userData.last_name,
+                                role: userData.role as Role,
                             };
                             setSession(newSession);
                         } else {
@@ -57,13 +57,6 @@ export function SessionProvider({ children }: PropsWithChildren) {
                     } catch (error) {
                         throw error;
                     }
-                    // Perform sign-in logic here
-                    const session: Session = {
-                        userId: '123456',
-                        token: 'abcdefg123456',
-                        role: Role.Worker
-                    };
-                    setSession(session);
                 },
                 signOut: () => {
                     setSession(null);

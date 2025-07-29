@@ -1,6 +1,6 @@
 export enum Role {
-    Manager,
-    Worker
+    Manager = 'Manager',
+    Worker = 'Worker',
 }
 
 export type Session = {
