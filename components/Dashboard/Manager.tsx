@@ -21,9 +21,22 @@ export default function Manager() {
     const handleJobPress = (jobId: string) => {
         router.push(`/jobs/${jobId}`);
     }
+
+    const handleCreateJob = () => {
+        router.push('/jobs/create');
+    }
+
     return (
         <>
-            <Text style={styles.sectionTitle}>Tasks to Assign</Text>
+            <View style={styles.headerContainer}>
+                <Text style={styles.sectionTitle}>Tasks to Assign</Text>
+                <TouchableOpacity
+                    style={styles.createButton}
+                    onPress={handleCreateJob}
+                >
+                    <Text style={styles.createButtonText}>Create Job</Text>
+                </TouchableOpacity>
+            </View>
             <FlatList
                 data={managerTasks}
                 keyExtractor={(item) => item.id}
@@ -50,10 +63,26 @@ export default function Manager() {
 }
 
 const styles = StyleSheet.create({
-    sectionTitle: { fontSize: 18, fontWeight: '600', marginBottom: 8 },
+    headerContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 16,
+    },
+    sectionTitle: { fontSize: 18, fontWeight: '600' },
     listItem: { flexDirection: 'row', alignItems: 'center', padding: 12, borderBottomWidth: 1, borderBottomColor: '#eee' },
     titleContainer: { flex: 1 },
     listTitle: { fontSize: 16, fontWeight: 'bold' },
     dropdownContainer: { width: 150 },
     picker: { height: 40, width: '100%' },
+    createButton: {
+        backgroundColor: '#0066cc',
+        paddingHorizontal: 16,
+        paddingVertical: 8,
+        borderRadius: 6,
+    },
+    createButtonText: {
+        color: 'white',
+        fontWeight: '600',
+    },
 });
