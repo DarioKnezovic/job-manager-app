@@ -8,8 +8,8 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const { signIn } = useSession();
 
-    const handleLogin = () => {
-        signIn();
+    const handleLogin = async () => {
+        await signIn(email, password);
     };
 
     return (
