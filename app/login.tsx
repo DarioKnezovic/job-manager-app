@@ -2,13 +2,12 @@ import React, { useState } from 'react';
 import { StyleSheet, SafeAreaView } from 'react-native';
 import { TextInput, Button, Text, Card } from 'react-native-paper';
 import { useSession } from "../ctx";
-import LoadingIndicator from "../components/Reusable/Loading";
-import useLoading from "../hooks/useLoading";
+import { useGlobalLoading } from "../contexts/LoadingContext";
 
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const { isLoading, withLoading } = useLoading();
+    const { isLoading, withLoading } = useGlobalLoading();
     const { signIn } = useSession();
 
     const handleLogin = () => {
@@ -43,13 +42,9 @@ export default function Login() {
                         style={styles.input}
                         disabled={isLoading}
                     />
-                    {isLoading ? (
-                        <LoadingIndicator size="large" />
-                    ) : (
-                        <Button mode="contained" onPress={handleLogin} style={styles.button}>
-                            Login
-                        </Button>
-                    )}
+                    <Button mode="contained" onPress={handleLogin} style={styles.button}>
+                        Login
+                    </Button>
                 </Card.Content>
             </Card>
         </SafeAreaView>
