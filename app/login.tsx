@@ -1,22 +1,31 @@
 import React, { useState } from 'react';
 import { StyleSheet, SafeAreaView } from 'react-native';
-import { TextInput, Button, Card, Text, Title } from 'react-native-paper';
+import { TextInput, Button, Text, Card } from 'react-native-paper';
 import { useSession } from "../ctx";
+import LoadingIndicator from "../components/Reusable/Loading";
+import useLoading from "../hooks/useLoading";
 
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const { isLoading, withLoading } = useLoading();
     const { signIn } = useSession();
 
-    const handleLogin = async () => {
-        await signIn(email, password);
+    const handleLogin = () => {
+        withLoading(async () => {
+            try {
+                await signIn(email, password);
+            } catch (error) {
+                console.error('Login failed:', error);
+            }
+        });
     };
 
     return (
         <SafeAreaView style={styles.container}>
             <Card style={styles.card}>
                 <Card.Content>
-                    <Title style={styles.header}>Login</Title>
+                    <Text variant="titleLarge" style={styles.header}>Login</Text>
                     <TextInput
                         label="Email"
                         value={email}
@@ -24,6 +33,7 @@ export default function Login() {
                         keyboardType="email-address"
                         autoCapitalize="none"
                         style={styles.input}
+                        disabled={isLoading}
                     />
                     <TextInput
                         label="Password"
@@ -31,10 +41,15 @@ export default function Login() {
                         onChangeText={setPassword}
                         secureTextEntry
                         style={styles.input}
+                        disabled={isLoading}
                     />
-                    <Button mode="contained" onPress={handleLogin} style={styles.button}>
-                        Login
-                    </Button>
+                    {isLoading ? (
+                        <LoadingIndicator size="large" />
+                    ) : (
+                        <Button mode="contained" onPress={handleLogin} style={styles.button}>
+                            Login
+                        </Button>
+                    )}
                 </Card.Content>
             </Card>
         </SafeAreaView>
