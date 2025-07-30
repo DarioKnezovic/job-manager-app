@@ -9,5 +9,6 @@ export type Session = {
     email: string;
     firstName: string;
     lastName: string;
+    companyId: string;
     role: Role;
 };

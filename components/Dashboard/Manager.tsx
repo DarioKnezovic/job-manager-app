@@ -7,27 +7,38 @@ import { useGlobalLoading } from "../../contexts/LoadingContext";
 import { Job } from "../../types/job";
 import { getAllJobs } from "../../services/jobService";
 import { useToast } from "../../contexts/ToastContext";
-
-const managerTasks = [
-    { id: '1', title: 'Assign Order #123', description: 'Assign to worker' },
-    { id: '2', title: 'Assign Order #124', description: 'Assign to worker' },
-];
-
-const mockWorkers = [
-    { id: 'w1', name: 'Alice' },
-    { id: 'w2', name: 'Bob' },
-    { id: 'w3', name: 'Charlie' },
-];
+import {useSession} from "../../ctx";
+import { getUsersByCompanyId } from "../../services/userService";
 
 export default function Manager() {
     const [selectedWorkers, setSelectedWorkers] = useState<{ [key: string]: string }>({});
     const [jobs, setJobs] = useState<Job[]>([]);
+    const [workers, setWorkers] = useState([]);
     const { withLoading } = useGlobalLoading();
     const { showToast } = useToast();
+    const { session } = useSession();
 
     useEffect(() => {
         loadJobs();
+        loadWorkers();
     }, []);
+
+    const loadWorkers = async () => {
+        withLoading(async () => {
+            try {
+                const companyId = session?.companyId;
+                if (!companyId) {
+                    setWorkers([]);
+                    return;
+                }
+                const fetchedWorkers = await getUsersByCompanyId(companyId);
+                setWorkers(fetchedWorkers);
+            } catch (error) {
+                console.error(error);
+                showToast('Failed to load workers. Please try again.', 'error');
+            }
+        });
+    };
 
     const loadJobs = async () => {
         withLoading(async () => {
@@ -102,7 +113,7 @@ export default function Manager() {
                             <Text style={styles.assignLabel}>Assign to:</Text>
                             <View style={styles.dropdownContainer}>
                                 <Dropdown
-                                    options={mockWorkers.map(w => ({ label: w.name, value: w.id }))}
+                                    options={workers.map(w => ({ label: `${w.first_name} ${w.last_name}`, value: w.id }))}
                                     selectedValue={selectedWorkers[item.id] || ''}
                                     onValueChange={value => setSelectedWorkers(prev => ({ ...prev, [item.id]: value }))}
                                     placeholder="Select worker"

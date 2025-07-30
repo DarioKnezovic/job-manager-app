@@ -48,6 +48,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
                                 email: userData.email,
                                 firstName: userData.first_name,
                                 lastName: userData.last_name,
+                                companyId: userData.company_id,
                                 role: userData.role as Role,
                             };
                             setSession(newSession);
