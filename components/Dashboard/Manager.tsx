@@ -5,7 +5,7 @@ import Dropdown from "../Reusable/Dropdown";
 import { router } from "expo-router";
 import { useGlobalLoading } from "../../contexts/LoadingContext";
 import { Job } from "../../types/job";
-import { getAllJobs } from "../../services/jobService";
+import { assignWorkerToJob, getAllJobs } from "../../services/jobService";
 import { useToast } from "../../contexts/ToastContext";
 import { useSession } from "../../ctx";
 import { getUsersByCompanyId } from "../../services/userService";
@@ -50,15 +50,40 @@ export default function Manager() {
                 showToast('Failed to load jobs. Please try again.', 'error');
             }
         })
-    }
+    };
+
+    const handleWorkerAssignment = async (jobId: string, workerId: string) => {
+        setSelectedWorkers(prev => ({ ...prev, [jobId]: workerId }));
+
+        try {
+            await assignWorkerToJob(jobId, workerId);
+
+            // Update the jobs state directly to reflect the change immediately
+            setJobs(prevJobs => prevJobs.map(job =>
+                job.id === jobId ? { ...job, assignedTo: workerId } : job
+            ));
+        } catch (error) {
+            console.error(error);
+            showToast('Failed to assign worker. Please try again.', 'error');
+
+            // Revert the selection on error
+            setSelectedWorkers(prev => ({ ...prev, [jobId]: jobs.find(job => job.id === jobId)?.assignedTo || '' }));
+
+        }
+    };
+
+    const displaySelectedWorkerName = (workerId: string) => {
+        const selectedWorker = workers.find(w => w.id === workerId);
+        return selectedWorker ? `${selectedWorker.first_name} ${selectedWorker.last_name}` : '';
+    };
 
     const handleJobPress = (jobId: string) => {
         router.push(`/jobs/${jobId}`);
-    }
+    };
 
     const handleCreateJob = () => {
         router.push('/jobs/create');
-    }
+    };
 
     return (
         <>
@@ -114,9 +139,10 @@ export default function Manager() {
                             <View style={styles.dropdownContainer}>
                                 <Dropdown
                                     options={workers.map(w => ({ label: `${w.first_name} ${w.last_name}`, value: w.id }))}
-                                    selectedValue={selectedWorkers[item.id] || ''}
-                                    onValueChange={value => setSelectedWorkers(prev => ({ ...prev, [item.id]: value }))}
+                                    selectedValue={item.assignedTo}
+                                    onValueChange={value => handleWorkerAssignment(item.id, value)}
                                     placeholder="Select worker"
+                                    allowDeselect={true}
                                 />
                             </View>
                         </View>
@@ -224,6 +250,7 @@ const styles = StyleSheet.create({
         borderColor: '#ddd',
         borderRadius: 6,
         backgroundColor: '#fff',
+        width: 150,
     },
     emptyContainer: {
         padding: 32,
@@ -233,7 +260,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#888',
     },
-    dropdownContainer: { width: 150 },
     picker: { height: 40, width: '100%' },
     createButton: {
         backgroundColor: '#0066cc',

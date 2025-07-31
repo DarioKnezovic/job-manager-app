@@ -1,5 +1,5 @@
 // services/firebase/jobService.ts
-import { collection, doc, getDocs, setDoc } from 'firebase/firestore';
+import { collection, doc, getDocs, setDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebaseConfig'; // Adjust import based on your Firebase config location
 import { Job, JobStatus } from '../../types/job';
 
@@ -39,3 +39,15 @@ export const getAllJobs = async (): Promise<Job[]> => {
         throw error;
     }
 }
+
+export const assignWorkerToJob = async (jobId: string, workerId: string): Promise<void> => {
+    try {
+        const jobRef = doc(db, "jobs", jobId);
+        await updateDoc(jobRef, {
+            assignedTo: workerId,
+        });
+    } catch (error) {
+        console.error("Error assigning worker to job:", error);
+        throw error;
+    }
+};

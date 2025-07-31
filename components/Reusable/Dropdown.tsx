@@ -8,17 +8,41 @@ interface DropdownProps {
     selectedValue: string;
     onValueChange: (value: string) => void;
     placeholder?: string;
+    allowDeselect?: boolean; // New optional prop
 }
 
-export default function Dropdown({ options, selectedValue, onValueChange, placeholder }: DropdownProps) {
+export default function Dropdown({
+        options,
+        selectedValue,
+        onValueChange,
+        placeholder,
+        allowDeselect = false
+    }: DropdownProps) {
     const [visible, setVisible] = useState(false);
 
-    const selectedLabel = options.find(opt => opt.value === selectedValue)?.label || placeholder || 'Select';
+    const selectedOption = options.find(opt => opt.value === selectedValue);
+    const displayText = selectedValue && selectedOption
+        ? selectedOption.label
+        : placeholder || 'Select';
 
     return (
         <>
             <TouchableOpacity style={styles.dropdown} onPress={() => setVisible(true)}>
-                <Text>{selectedLabel}</Text>
+                <View style={styles.dropdownContent}>
+                    <Text style={styles.displayText}>{displayText}</Text>
+                    {allowDeselect && selectedValue && (
+                        <TouchableOpacity
+                            onPress={(e) => {
+                                e.stopPropagation();
+                                onValueChange('');
+                            }}
+                            style={styles.clearButton}
+                            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                        >
+                            <Text style={styles.clearButtonText}>×</Text>
+                        </TouchableOpacity>
+                    )}
+                </View>
             </TouchableOpacity>
             <Modal transparent visible={visible} animationType="fade">
                 <TouchableOpacity style={styles.overlay} onPress={() => setVisible(false)}>
@@ -47,7 +71,23 @@ export default function Dropdown({ options, selectedValue, onValueChange, placeh
 
 const styles = StyleSheet.create({
     dropdown: { padding: 10, borderWidth: 1, borderColor: '#ccc', borderRadius: 4 },
+    dropdownContent: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    displayText: {
+        flex: 1,
+    },
     overlay: { width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.2)' },
-    menu: { backgroundColor: '#fff', borderRadius: 6, minWidth: 200, padding: 10, margin: 'auto', minHeight: '100' },
+    menu: { backgroundColor: '#fff', borderRadius: 6, minWidth: 200, padding: 10, margin: 'auto', minHeight: 100 },
     item: { padding: 10 },
+    clearButton: {
+        paddingLeft: 8,
+    },
+    clearButtonText: {
+        fontSize: 18,
+        color: '#999',
+        fontWeight: 'bold',
+    },
 });
