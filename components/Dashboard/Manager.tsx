@@ -7,7 +7,7 @@ import { useGlobalLoading } from "../../contexts/LoadingContext";
 import { Job } from "../../types/job";
 import { getAllJobs } from "../../services/jobService";
 import { useToast } from "../../contexts/ToastContext";
-import {useSession} from "../../ctx";
+import { useSession } from "../../ctx";
 import { getUsersByCompanyId } from "../../services/userService";
 
 export default function Manager() {

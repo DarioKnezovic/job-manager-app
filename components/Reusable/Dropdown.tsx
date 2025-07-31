@@ -47,7 +47,7 @@ export default function Dropdown({ options, selectedValue, onValueChange, placeh
 
 const styles = StyleSheet.create({
     dropdown: { padding: 10, borderWidth: 1, borderColor: '#ccc', borderRadius: 4 },
-    overlay: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.2)' },
-    menu: { backgroundColor: '#fff', borderRadius: 6, minWidth: 200, padding: 10, maxHeight: 300 }, // maxHeight added
+    overlay: { width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.2)' },
+    menu: { backgroundColor: '#fff', borderRadius: 6, minWidth: 200, padding: 10, margin: 'auto', minHeight: '100' },
     item: { padding: 10 },
 });
